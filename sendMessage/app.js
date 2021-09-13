@@ -1,16 +1,19 @@
 const express = require("express");
 const app = express();
 
-//设置跨域访问
+//Set up cross-domain access
 app.all("*",function(req,res,next){
-    //设置允许跨域的域名，*代表允许任意域名跨域
+    
+    //Allow cross-domain for any domain
     res.header("Access-Control-Allow-Origin","*");
-    //允许的header类型
+    
+    //Allowable header types
     res.header("Access-Control-Allow-Headers","content-type");
-    //跨域允许的请求方式 
+    
+    //Cross-domain allowed request methods 
     res.header("Access-Control-Allow-Methods","DELETE,PUT,POST,GET,OPTIONS");
     if (req.method.toLowerCase() == 'options')
-        res.send(200);  //让options尝试请求快速结束
+        res.send(200);  //Let options try to request a quick end
     else
         next();
 })
@@ -18,10 +21,10 @@ app.use(express.static("./"))
 var bodyParser = require('body-parser')
 
 
-//  解析 application/x-www-form-urlencoded响应头
+// Parsing application/x-www-form-urlencoded response headers
 app.use(bodyParser.urlencoded({ extended: false }))
 
-//链接数据库
+//Linking Database
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : '47.94.102.163',
@@ -31,11 +34,11 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
-//提交信息接口
+//Submit information interface
 app.post("/sendmessage",(req,res)=>{
     console.log(req.body);
 
-    //插入数据
+    //inser data
     var addSqlParams =  [req.body.name, req.body.email,req.body.message];
     var addSql = 'INSERT INTO message(name,email,message) VALUES(?,?,?)';
     connection.query(addSql,addSqlParams,function (err, result) {
@@ -50,12 +53,12 @@ app.post("/sendmessage",(req,res)=>{
 });
 
 
-    res.send("提交成功")
+    res.send("Submitted successfully")
 })
 
-//监听端口
+//Listening port
 app.listen("3000",()=>{
-    console.log("成功");
+    console.log("Succeeded");
 })
 
 
